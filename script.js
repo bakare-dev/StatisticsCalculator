@@ -16,7 +16,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 displayError("Please enter valid numeric data.");
                 return;
             }
-            solveSelected(data);
+            const processedData = processData(data);
+            
+            solveSelected(processedData);
         } else if (dataType === "grouped") {
             const file = document.getElementById("data-file").files[0];
             if (!file) {
@@ -41,6 +43,25 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+function processData(data) {
+    const valueFrequencyMap = {};
+
+    data.forEach(value => {
+        if (valueFrequencyMap[value]) {
+            valueFrequencyMap[value]++;
+        } else {
+            valueFrequencyMap[value] = 1;
+        }
+    });
+
+    const valueFrequencyArray = Object.entries(valueFrequencyMap).map(([value, frequency]) => ({
+        value: parseFloat(value),
+        frequency
+    }));
+
+    return valueFrequencyArray;
+}
 
 function solveSelected(data) {
     const selectedOptions = Array.from(document.getElementById("solve-options").selectedOptions).map(option => option.value);
