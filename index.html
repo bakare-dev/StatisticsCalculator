@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics Calculator</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Statistics Calculator</h1>
+        <form id="data-form">
+            <label for="data-type">Data Type:</label>
+            <select id="data-type" name="data-type">
+                <option value="ungrouped">Ungrouped</option>
+                <option value="grouped">Grouped</option>
+            </select>
+            <div id="ungrouped-input" class="data-input">
+                <label for="data-values">Enter Values (comma separated):</label>
+                <input type="text" id="data-values" name="data-values">
+            </div>
+            <div id="grouped-input" class="data-input" style="display: none;">
+                <label for="data-file">Upload File:</label>
+                <input type="file" id="data-file" name="data-file">
+            </div>
+            <button type="submit">Calculate</button>
+        </form>
+        <div id="results"></div>
+    </div>
+    <script src="./script.js"></script>
+</body>
+
+</html>
