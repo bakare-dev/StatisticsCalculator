@@ -26,6 +26,16 @@
                     value,frequecy)</label>
                 <input type="file" id="data-file" name="data-file">
             </div>
+            <label for="solve-options">Select what to solve:</label>
+            <select id="solve-options" name="solve-options" multiple>
+                <option value="mean">Mean</option>
+                <option value="median">Median</option>
+                <option value="mode">Mode</option>
+                <option value="variance">Variance</option>
+                <option value="stdDev">Standard Deviation</option>
+                <option value="skewness">Skewness</option>
+                <option value="all">Solve All</option>
+            </select>
             <button type="submit">Calculate</button>
         </form>
         <div id="results"></div>
