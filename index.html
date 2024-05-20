@@ -6,11 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistics Calculator</title>
     <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
     <div class="container">
         <h1>Statistics Calculator</h1>
+        <div id="error" style="color: red; margin-top: 10px;"></div>
         <form id="data-form">
             <label for="data-type">Data Type:</label>
             <select id="data-type" name="data-type">
@@ -23,11 +25,12 @@
             </div>
             <div id="grouped-input" class="data-input" style="display: none;">
                 <label for="data-file">Upload File: (file format should be csv and it should be structured
-                    value,frequecy)</label>
-                <input type="file" id="data-file" name="data-file">
+                    value,frequency)</label>
+                <input type="file" id="data-file" name="data-file" accept=".csv">
             </div>
             <label for="solve-options">Select what to solve:</label>
-            <select id="solve-options" name="solve-options" multiple>
+            <select id="solve-options" name="solve-options">
+                <option value="">Select</option>
                 <option value="mean">Mean</option>
                 <option value="median">Median</option>
                 <option value="mode">Mode</option>
@@ -36,9 +39,20 @@
                 <option value="skewness">Skewness</option>
                 <option value="all">Solve All</option>
             </select>
+            <label for="chart-type">Select Chart Type:</label>
+            <select id="chart-type" name="chart-type">
+                <option value="">Select</option>
+                <option value="histogram">Histogram</option>
+                <option value="piechart">Pie Chart</option>
+            </select>
             <button type="submit">Calculate</button>
         </form>
+
         <div id="results"></div>
+        <div id="charts" style="display: none;">
+            <canvas id="chartCanvas" width="400" height="300"></canvas>
+        </div>
+        <button id="download-chart" style="display: none;">Download Chart</button>
     </div>
     <script src="./script.js"></script>
 </body>
