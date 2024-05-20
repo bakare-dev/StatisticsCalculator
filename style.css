@@ -1,6 +1,5 @@
 body {
-    font-family:
-    Arial, sans-serif;
+    font-family: Arial, sans-serif;
     background-color: #f0f0f0;
     display: flex;
     justify-content: center;
@@ -67,6 +66,7 @@ button:hover {
 }
 
 #download-chart,
-#download-results {
+#download-results,
+#back-button {
     margin-top: 10px;
 }

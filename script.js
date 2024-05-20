@@ -15,12 +15,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 displayError("Please enter data values.");
                 return;
             }
-            const values = dataValues.split(",").map(Number);
-            const data = values.filter(val => !isNaN(val));
-            if (data.length === 0) {
-                displayError("Please enter valid numeric data.");
+            const values = dataValues.split(",").map(val => val.trim());
+            const invalidData = values.filter(val => isNaN(val));
+            if (invalidData.length > 0) {
+                displayError("Please enter valid numeric data. Invalid entries: " + invalidData.join(", "));
                 return;
             }
+            const data = values.map(Number);
             const processedData = processData(data);
             solveSelected(processedData);
         } else if (dataType === "grouped") {
@@ -38,8 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 const contents = e.target.result;
                 const rows = contents.split("\n");
                 const data = rows.map(row => {
-                    const [value, frequency] = row.split(",").map(Number);
-                    return { value, frequency };
+                    const [value, frequency] = row.split(",").map(val => val.trim());
+                    return { value: Number(value), frequency: Number(frequency) };
                 }).filter(item => !isNaN(item.value) && !isNaN(item.frequency));
                 if (data.length === 0) {
                     displayError("File does not contain valid numeric data.");
@@ -79,9 +80,12 @@ function solveSelected(data) {
     if (selectedOptions.includes("all")) {
         results.mean = calculateMean(data);
         results.median = calculateMedian(data);
-        results.mode = calculateMode(data);
+        results.range = calculateRange(data);
         results.variance = calculateVariance(data);
-        results.stdDev = calculateStdDev(data);
+        results.StandardDeviation = calculateStdDev(data);
+        results.InterquartileRange = calculateIQR(data);
+        results.percentiles = calculatePercentiles(data);
+        results.quartiles = calculateQuartiles(data);
         results.skewness = calculateSkewness(data);
     } else {
         selectedOptions.forEach(option => {
@@ -92,14 +96,23 @@ function solveSelected(data) {
                 case "median":
                     results.median = calculateMedian(data);
                     break;
-                case "mode":
-                    results.mode = calculateMode(data);
+                case "range":
+                    results.range = calculateRange(data);
                     break;
                 case "variance":
                     results.variance = calculateVariance(data);
                     break;
                 case "stdDev":
-                    results.stdDev = calculateStdDev(data);
+                    results.StandardDeviation = calculateStdDev(data);
+                    break;
+                case "iqr":
+                    results.InterquartileRange = calculateIQR(data);
+                    break;
+                case "percentiles":
+                    results.percentiles = calculatePercentiles(data);
+                    break;
+                case "quartiles":
+                    results.quartiles = calculateQuartiles(data);
                     break;
                 case "skewness":
                     results.skewness = calculateSkewness(data);
@@ -111,7 +124,10 @@ function solveSelected(data) {
         });
     }
     displayResults(results);
-    renderCharts(data);
+    const chartType = document.getElementById("chart-type").value;
+    if (chartType) {
+        renderCharts(data, chartType);
+    }
 }
 
 function calculateMean(data) {
@@ -151,6 +167,11 @@ function calculateMode(data) {
     return modes.length === data.length ? "No mode" : modes.join(", ");
 }
 
+function calculateRange(data) {
+    const values = data.map(item => item.value);
+    return Math.max(...values) - Math.min(...values);
+}
+
 function calculateVariance(data) {
     const mean = calculateMean(data);
     return data.reduce((sum, { value, frequency }) => sum + frequency * Math.pow(value - mean, 2), 0) / data.reduce((a, b) => a + b.frequency, 0);
@@ -158,6 +179,42 @@ function calculateVariance(data) {
 
 function calculateStdDev(data) {
     return Math.sqrt(calculateVariance(data));
+}
+
+function calculateIQR(data) {
+    const sortedData = data.slice().sort((a, b) => a.value - b.value);
+    const q1 = calculatePercentile(sortedData, 25);
+    const q3 = calculatePercentile(sortedData, 75);
+    return q3 - q1;
+}
+
+function calculatePercentiles(data) {
+    return {
+        '25th Percentile': calculatePercentile(data, 25),
+        '50th Percentile': calculatePercentile(data, 50),
+        '75th Percentile': calculatePercentile(data, 75),
+    };
+}
+
+function calculateQuartiles(data) {
+    return {
+        Q1: calculatePercentile(data, 25),
+        Q2: calculatePercentile(data, 50),
+        Q3: calculatePercentile(data, 75),
+    };
+}
+
+function calculatePercentile(data, percentile) {
+    const sortedData = data.slice().sort((a, b) => a.value - b.value);
+    const n = sortedData.reduce((sum, item) => sum + item.frequency, 0);
+    const rank = (percentile / 100) * (n - 1) + 1;
+    let cumulativeFrequency = 0;
+    for (const item of sortedData) {
+        cumulativeFrequency += item.frequency;
+        if (cumulativeFrequency >= rank) {
+            return item.value;
+        }
+    }
 }
 
 function calculateSkewness(data) {
@@ -170,8 +227,20 @@ function displayResults(results) {
     const resultsDiv = document.getElementById("results");
     for (const [key, value] of Object.entries(results)) {
         const p = document.createElement("p");
-        p.textContent = `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`;
-        resultsDiv.appendChild(p);
+        if (key === "percentiles" || key === "quartiles") {
+            p.textContent = `${key.charAt(0).toUpperCase() + key.slice(1)}:`;
+            const ul = document.createElement("ul");
+            for (const [subKey, subValue] of Object.entries(value)) {
+                const li = document.createElement("li");
+                li.textContent = `${subKey}: ${subValue}`;
+                ul.appendChild(li);
+            }
+            resultsDiv.appendChild(p);
+            resultsDiv.appendChild(ul);
+        } else {
+            p.textContent = `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`;
+            resultsDiv.appendChild(p);
+        }
     }
     document.getElementById("download-results").style.display = "block";
 }
@@ -191,46 +260,60 @@ function clearError() {
     errorDiv.textContent = "";
 }
 
-function renderCharts(data) {
+function renderCharts(data, chartType) {
     const labels = data.map(d => d.value);
     const frequencies = data.map(d => d.frequency);
-    const chartType = document.getElementById("chart-type").value;
     const chartCanvas = document.getElementById("chartCanvas");
 
     if (window.chart) {
         window.chart.destroy();
     }
 
-    if (!chartType) {
-        document.getElementById('charts').style.display = 'none';
-        document.getElementById('download-chart').style.display = 'none';
-        return;
-    }
-
     document.getElementById('charts').style.display = 'block';
     document.getElementById('download-chart').style.display = 'block';
 
     const ctx = chartCanvas.getContext('2d');
-    const chartConfig = {
-        type: chartType === 'histogram' ? 'bar' : 'pie',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Frequency',
-                data: frequencies,
-                backgroundColor: labels.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.2)`),
-                borderColor: labels.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`),
-                borderWidth: 1
-            }]
-        },
-        options: chartType === 'histogram' ? {
-            scales: {
-                y: {
-                    beginAtZero: true
+    let chartConfig;
+
+    if (chartType === 'histogram' || chartType === 'bar') {
+        chartConfig = {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Frequency',
+                    data: frequencies,
+                    backgroundColor: labels.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.2)`),
+                    borderColor: labels.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: { title: { display: true, text: 'Value' } },
+                    y: { beginAtZero: true, title: { display: true, text: 'Frequency' } }
                 }
             }
-        } : {}
-    };
+        };
+    } else if (chartType === 'pie') {
+        chartConfig = {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Frequency',
+                    data: frequencies,
+                    backgroundColor: labels.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.2)`),
+                    borderColor: labels.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`),
+                    borderWidth: 1
+                }]
+            },
+            options: {}
+        };
+    } else {
+        displayError("Invalid chart type selected.");
+        return;
+    }
 
     window.chart = new Chart(ctx, chartConfig);
 
@@ -242,7 +325,6 @@ function renderCharts(data) {
     });
 }
 
-
 function downloadResults() {
     const resultsDiv = document.getElementById('results');
     const resultsText = Array.from(resultsDiv.children).map(p => p.textContent).join("\n");
@@ -251,4 +333,16 @@ function downloadResults() {
     link.href = URL.createObjectURL(blob);
     link.download = 'results.txt';
     link.click();
+}
+
+function clearAll() {
+    document.getElementById("data-form").reset();
+    clearResults();
+    clearError();
+    document.getElementById('charts').style.display = 'none';
+    document.getElementById('download-chart').style.display = 'none';
+    document.getElementById('download-results').style.display = 'none';
+    if (window.chart) {
+        window.chart.destroy();
+    }
 }

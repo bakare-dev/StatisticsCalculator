@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="./style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
     <div class="container">
         <h1>Statistics Calculator</h1>
@@ -22,7 +24,8 @@
                 <input type="text" id="data-values" name="data-values">
             </div>
             <div id="grouped-input" class="data-input" style="display: none;">
-                <label for="data-file">Upload File: (file format should be csv and it should be structured value,frequency)</label>
+                <label for="data-file">Upload File: (file format should be csv and it should be structured
+                    value,frequency)</label>
                 <input type="file" id="data-file" name="data-file" accept=".csv">
             </div>
             <label for="solve-options">Select what to solve:</label>
@@ -30,9 +33,12 @@
                 <option value="">Select</option>
                 <option value="mean">Mean</option>
                 <option value="median">Median</option>
-                <option value="mode">Mode</option>
+                <option value="range">Range</option>
                 <option value="variance">Variance</option>
                 <option value="stdDev">Standard Deviation</option>
+                <option value="iqr">Interquartile Range</option>
+                <option value="percentiles">Percentiles</option>
+                <option value="quartiles">Quartiles</option>
                 <option value="skewness">Skewness</option>
                 <option value="all">Solve All</option>
             </select>
@@ -40,9 +46,11 @@
             <select id="chart-type" name="chart-type">
                 <option value="">Select</option>
                 <option value="histogram">Histogram</option>
-                <option value="piechart">Pie Chart</option>
+                <option value="bar">Bar Chart</option>
+                <option value="pie">Pie Chart</option>
             </select>
             <button type="submit">Calculate</button>
+            <button type="button" id="back-button" onclick="clearAll()">Back</button>
         </form>
         <div id="results"></div>
         <div id="charts" style="display: none;">
@@ -53,4 +61,5 @@
     </div>
     <script src="./script.js"></script>
 </body>
+
 </html>
