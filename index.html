@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +7,6 @@
     <link rel="stylesheet" href="./style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
     <div class="container">
         <h1>Statistics Calculator</h1>
@@ -24,8 +22,7 @@
                 <input type="text" id="data-values" name="data-values">
             </div>
             <div id="grouped-input" class="data-input" style="display: none;">
-                <label for="data-file">Upload File: (file format should be csv and it should be structured
-                    value,frequency)</label>
+                <label for="data-file">Upload File: (file format should be csv and it should be structured value,frequency)</label>
                 <input type="file" id="data-file" name="data-file" accept=".csv">
             </div>
             <label for="solve-options">Select what to solve:</label>
@@ -47,14 +44,13 @@
             </select>
             <button type="submit">Calculate</button>
         </form>
-
         <div id="results"></div>
         <div id="charts" style="display: none;">
             <canvas id="chartCanvas" width="400" height="300"></canvas>
         </div>
         <button id="download-chart" style="display: none;">Download Chart</button>
+        <button id="download-results" onclick="downloadResults()" style="display: none;">Download Results</button>
     </div>
     <script src="./script.js"></script>
 </body>
-
 </html>
