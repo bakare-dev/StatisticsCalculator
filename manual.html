@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics Calculator</title>
+    <link rel="stylesheet" href="./manual.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>User Manual</h1>
+        <nav>
+            <a href="index.html">Back to Calculator</a>
+        </nav>
+        <div class="manual">
+            <h2>User Manual</h2>
+            <p>Welcome to the Statistics Calculator! This manual will guide you through using the application,
+                understanding
+                the statistical formulas used, and interpreting the results.</p>
+            <h3>Getting Started</h3>
+            <ol>
+                <li><strong>Select Data Type</strong>:
+                    <ul>
+                        <li><strong>Ungrouped</strong>: Use this option if you have raw data values.</li>
+                        <li><strong>Grouped</strong>: Use this option if you have data in a grouped format with
+                            frequencies.
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>Enter Data</strong>:
+                    <ul>
+                        <li><strong>Ungrouped Data</strong>: Enter your data values separated by commas (e.g.,
+                            <code>1, 2, 3, 4</code>).
+                        </li>
+                        <li><strong>Grouped Data</strong>: Upload a CSV file with two columns: <code>value</code> and
+                            <code>frequency</code>.
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>Select Calculation Options</strong>:
+                    <ul>
+                        <li>Choose the statistical measures you want to calculate. You can select a single measure or
+                            choose
+                            "Solve All" to calculate all available measures.</li>
+                    </ul>
+                </li>
+                <li><strong>Select Chart Type</strong>:
+                    <ul>
+                        <li>Choose the type of chart you want to generate: Histogram, Bar Chart, or Pie Chart.</li>
+                    </ul>
+                </li>
+                <li><strong>Calculate</strong>:
+                    <ul>
+                        <li>Click the "Calculate" button to process your data and display the results.</li>
+                    </ul>
+                </li>
+                <li><strong>Download Options</strong>:
+                    <ul>
+                        <li>After calculations, you can download the results and the generated chart.</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>Display Formulas</h3>
+            <p>Here are the formulas used for each calculation:</p>
+            <ul>
+                <li><strong>Mean</strong>: \(\text{Mean} (\mu) = \frac{\sum (X \times f)}{\sum f}\) where \(X\) is the
+                    value
+                    and \(f\) is the frequency.</li>
+                <li><strong>Median</strong>: Sort the data. Find the middle value for odd number of observations or
+                    average
+                    of two middle values for even number of observations.</li>
+                <li><strong>Range</strong>: \(\text{Range} = \text{Maximum Value} - \text{Minimum Value}\)</li>
+                <li><strong>Variance</strong>: \(\text{Variance} (\sigma^2) = \frac{\sum f(X - \mu)^2}{\sum f}\)</li>
+                <li><strong>Standard Deviation</strong>: \(\text{Standard Deviation} (\sigma) = \sqrt{\text{Variance}}\)
+                </li>
+                <li><strong>Interquartile Range (IQR)</strong>: \(\text{IQR} = Q3 - Q1\) where \(Q1\) is the 25th
+                    percentile
+                    and \(Q3\) is the 75th percentile.</li>
+                <li><strong>Percentiles</strong>: \(P_k = X\left(\frac{k(n+1)}{100}\right)\) where \(P_k\) is the
+                    \(k\)-th
+                    percentile and \(n\) is the number of observations.</li>
+                <li><strong>Quartiles</strong>: \(Q1\) (25th percentile), \(Q2\) (Median, 50th percentile), \(Q3\) (75th
+                    percentile).</li>
+                <li><strong>Skewness</strong>: \(\text{Skewness} = \frac{\sum f \left(\frac{X -
+                    \mu}{\sigma}\right)^3}{\sum
+                    f}\)</li>
+            </ul>
+
+            <h3>Error Handling</h3>
+            <ul>
+                <li><strong>Ungrouped Data</strong>:
+                    <ul>
+                        <li>Ensure data values are numeric and separated by commas.</li>
+                        <li>Check for invalid entries and correct them.</li>
+                    </ul>
+                </li>
+                <li><strong>Grouped Data</strong>:
+                    <ul>
+                        <li>Ensure the CSV file is properly formatted with numeric values and frequencies.</li>
+                        <li>Check for non-numeric or missing data entries.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>Interpreting Results</h3>
+            <ul>
+                <li><strong>Mean</strong>: Provides the average value of your data.</li>
+                <li><strong>Median</strong>: Indicates the middle value, giving a measure of central tendency less
+                    affected
+                    by outliers.</li>
+                <li><strong>Range</strong>: Shows the spread between the highest and lowest values.</li>
+                <li><strong>Variance</strong>: Measures the dispersion of data points from the mean.</li>
+                <li><strong>Standard Deviation</strong>: Indicates the average distance of each data point from the
+                    mean.
+                </li>
+                <li><strong>IQR</strong>: Represents the range of the middle 50% of data points.</li>
+                <li><strong>Percentiles</strong>: Show the value below which a given percentage of observations fall.
+                </li>
+                <li><strong>Quartiles</strong>: Divide your data into four equal parts.</li>
+                <li><strong>Skewness</strong>: Describes the asymmetry of the data distribution.</li>
+            </ul>
+
+            <h3>Charts</h3>
+            <ul>
+                <li><strong>Histogram</strong>: Displays the frequency distribution of ungrouped data.</li>
+                <li><strong>Bar Chart</strong>: Suitable for grouped data showing frequencies of different categories.
+                </li>
+                <li><strong>Pie Chart</strong>: Illustrates the proportional distribution of different categories.</li>
+            </ul>
+
+            <h3>Additional Functions</h3>
+            <ul>
+                <li><strong>Download Chart</strong>: Click this button to save the generated chart as an image file.
+                </li>
+                <li><strong>Download Results</strong>: Save the calculated results as a text file.</li>
+            </ul>
+
+            <h3>Reset and Back</h3>
+            <ul>
+                <li>Use the "Back" button to reset all inputs and clear results to start a new calculation.</li>
+            </ul>
+
+            <p>By following this manual, you should be able to effectively use the Statistics Calculator to analyze your
+                data and visualize the results.</p>
+        </div>
+        <script src="./script.js"></script>
+</body>
+
+</html>
